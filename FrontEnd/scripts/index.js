@@ -9,10 +9,10 @@ fetch(URL_WORKS)
 
         data.forEach(item => createGallery(item));
     })
-
+    .catch(error => console.log(error))
+     
 
 const gallery = document.querySelector('.gallery')
-
 
 const createGallery = data => {
 
@@ -30,5 +30,38 @@ const createGallery = data => {
     figure.appendChild(figCaption)
 
     gallery.appendChild(figure)
+}
 
+
+
+
+
+
+
+
+
+
+
+const URL_CATEGORIES = 'http://localhost:5678/api/categories'
+
+fetch(URL_CATEGORIES)
+    .then(res => res.json())
+    .then(data => {
+        console.log(JSON.stringify(data, null, 3))
+
+        data.forEach(item => createCategories(item));
+    })
+    .catch(error => console.log(error))
+
+
+
+const filterButtons = document.querySelector('.filter-buttons')
+
+const createCategories = data => {
+
+    const button =  document.createElement('button')
+    button.setAttribute('class', 'filter-button')
+    button.innerHTML = data.name
+
+    filterButtons.appendChild(button)
 }
