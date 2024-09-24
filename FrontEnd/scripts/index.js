@@ -1,21 +1,10 @@
-console.log('test')
-
-const URL_WORKS = 'http://localhost:5678/api/works'
-
-fetch(URL_WORKS)
-    .then(res => res.json())
-    .then(data => {
-        console.log(JSON.stringify(data, null, 2))
-
-        data.forEach(item => createGallery(item));
-    })
-    .catch(error => console.log(error))
-     
+import { getWorks, getCategories } from "./api.js"
 
 const gallery = document.querySelector('.gallery')
+const filterButtons = document.querySelector('.filter-buttons')
+const filterAll = document.getElementById('filter-all')
 
 const createGallery = data => {
-
     const figure = document.createElement('figure')
 
     const img = document.createElement('img')
@@ -33,29 +22,12 @@ const createGallery = data => {
 }
 
 
-
-
-
-
-
-
-
-
-
-const URL_CATEGORIES = 'http://localhost:5678/api/categories'
-
-fetch(URL_CATEGORIES)
-    .then(res => res.json())
-    .then(data => {
-        console.log(JSON.stringify(data, null, 3))
-
-        data.forEach(item => createCategories(item));
+filterAll.addEventListener('click', () => {
+    getWorks().then(data => {
+        gallery.innerHTML = ''
+        data.forEach(item => createGallery(item));
     })
-    .catch(error => console.log(error))
-
-
-
-const filterButtons = document.querySelector('.filter-buttons')
+})
 
 const createCategories = data => {
 
@@ -63,5 +35,22 @@ const createCategories = data => {
     button.setAttribute('class', 'filter-button')
     button.innerHTML = data.name
 
+    button.addEventListener('click', () => {
+
+        getWorks().then(works => {
+            const filteredData = works.filter(item => item.categoryId === data.id)
+            gallery.innerHTML = ''
+            filteredData.forEach(item => createGallery(item));
+        })
+    })
+
+
     filterButtons.appendChild(button)
 }
+
+getWorks().then(data => {
+    gallery.innerHTML = ''
+    data.forEach(item => createGallery(item));
+})
+
+getCategories().then(data => data.forEach(item => createCategories(item)))
