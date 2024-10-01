@@ -1,15 +1,19 @@
-.filter-buttons {  
-    display: flex;  
-    justify-content: center;  
+body { 
+    background-color: #FFFEF8;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
     gap: 10px;
-}  
+}
 
 .filter-buttons button {
     background-color: white;
     color: black;
     border: 1px solid #1D6154;
-    border-radius: 60px;
+    border-radius: 10% 60%;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -18,17 +22,23 @@
     margin: 4px 2px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
-}  
+    -webkit-border-radius: 10% 60%;
+    -moz-border-radius: 10% 60%;
+    -ms-border-radius: 10% 60%;
+    -o-border-radius: 10% 60%;
+}
 
-.filter-buttons button:hover {  
-    background-color: #1D6154;  
-    color: white;  
-}  
+.filter-buttons button:hover {
+    background-color: #1D6154;
+    color: white;
+}
 
-.hidden {  
-    display: none;  
-}  
+/* Classe pour masquer les éléments */
+.hidden {
+    display: none;
+}
+
+/* Correction de la règle pour .section-admin */
+.section-admin {
+    /* Vous pouvez ajouter des styles spécifiques pour la section admin ici si nécessaire */
+}
