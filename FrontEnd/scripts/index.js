@@ -1,4 +1,4 @@
-import { getWorks, getCategories, getLogin } from "./api.js";
+import { getWorks, getCategories, postLogin } from "./api.js";
 
 const gallery = document.querySelector('.gallery');
 const filterButtons = document.querySelector('.filter-buttons');
@@ -101,33 +101,99 @@ getCategories().then(data => data.forEach(item => createCategories(item)));
 
 // Gestion de la connexion
 const loginForm = document.getElementById('login-form');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
 
-loginForm.addEventListener('submit', async (event) => {
+loginForm.addEventListener('submit', event => {
     event.preventDefault(); // Empêche la soumission du formulaire par défaut
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const data = {
+        email: email.value,
+        password: password.value
+    };
 
-    try {
-        const response = await getLogin({ email, password });
-        if (response.token) {
-            // Connexion réussie, rediriger vers la page d'accueil
-            window.location.href = 'index.html?admin=true';
-        } else {
-            // Connexion échouée, afficher un message d'erreur
-            alert('Email ou mot de passe incorrect.');
-        }
-    } catch (error) {
-        console.error('Erreur lors de la connexion:', error);
-        alert('Erreur lors de la connexion. Veuillez réessayer.');
-    }
+    postLogin(data)
+        .then(data => {
+            if (data.token) {
+                window.location.href = 'index.html';
+                localStorage.token = data.token;
+            } else {
+                alert('Erreur lors de la connexion. Veuillez réessayer.');
+            }
+        })
+        .catch(() => alert("L'api n'est pas disponible"));
 });
 
 // Vérifier si l'utilisateur est en mode administrateur
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('admin') === 'true') {
-    const adminSection = document.querySelector('.section-admin');
-    if (adminSection) {
-        adminSection.classList.remove('hidden');
+    const modeEdition = document.querySelector('.mode-edition');
+    const modificationLink = document.querySelector('.modification');
+    const modal = document.querySelector('#modal1');
+
+    if (modeEdition) {
+        modeEdition.classList.remove('hidden');
+    }
+    if (modificationLink) {
+        modificationLink.classList.remove('hidden');
+    }
+    if (modal) {
+        modal.classList.remove('hidden');
     }
 }
+
+// Code pour ouvrir et fermer la modal
+let modal = null;
+
+const openModal = function(e) {
+    e.preventDefault();
+    const target = document.querySelector(e.target.getAttribute('href'));
+    if (!target) return;
+
+    // Affiche le modal
+    target.style.display = 'block';
+    target.removeAttribute('aria-hidden');
+    target.setAttribute('aria-modal', 'true');
+
+    // Sauvegarde de la boîte modal cible qui a été ouverte
+    modal = target;
+
+    // Ajoute des écouteurs d'événements pour fermer la modal
+    modal.addEventListener('click', closeModal);
+    modal.querySelector('.js-modal-close').addEventListener('click', closeModal);
+    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation);
+};
+
+const closeModal = function(e) {
+    if (modal === null) return;
+    e.preventDefault();
+
+    // Remasquer la boîte modal
+    modal.style.display = "none";
+    modal.setAttribute('aria-hidden', 'true');
+    modal.removeAttribute('aria-modal');
+
+    // Supprime les écouteurs d'événements
+    modal.removeEventListener('click', closeModal);
+    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal);
+    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation);
+
+    // Réinitialise la variable modal
+    modal = null;
+};
+
+const stopPropagation = function(e) {
+    e.stopPropagation();
+};
+
+// Ajoute des écouteurs d'événements pour ouvrir la modal
+document.querySelectorAll('.js-modal').forEach(a => {
+    a.addEventListener('click', openModal);
+});
+
+// Fermer la modal avec le bouton échap
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape" || e.key === "Esc") {
+        closeModal(e);
+    }
+});

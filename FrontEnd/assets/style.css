@@ -186,3 +186,7 @@ footer nav ul {
 	margin: 2em
 }
 
+.hidden {
+    display: none;
+    visibility: hidden;
+}

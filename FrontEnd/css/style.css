@@ -1,4 +1,4 @@
-body { 
+body {
     background-color: #FFFEF8;
 }
 
@@ -10,10 +10,12 @@ body {
 }
 
 .filter-buttons button {
+    width: 100px;
+    height: 37px;
     background-color: white;
     color: black;
     border: 1px solid #1D6154;
-    border-radius: 20px;
+    border-radius: 25px;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -22,10 +24,10 @@ body {
     margin: 4px 2px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -ms-border-radius: 20px;
-    -o-border-radius: 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
 }
 
 .filter-buttons button:hover {
@@ -33,27 +35,162 @@ body {
     color: white;
 }
 
+.filter-buttons .active {
+    background-color: #1D6154;
+    color: white;
+}
+
 /* Classe pour masquer les éléments */
 .hidden {
     display: none;
+    visibility: hidden;
 }
 
 /* Correction de la règle pour .section-admin */
 .section-admin {
-    display: hidden;
+    display: none;
 }
 
-
 .mode-edition {
-    /* display: none;: */
-    visibility: hidden; 
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 59px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     color: white;
     background-color: black;
+}
+
+/********************************/
+/********************************/
+/********************************/
+
+.administration {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 31px;
+}
+
+.modification {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.administration i, .administration p {
+    padding: 10px 0;
+    margin: 0;
+}
+
+/***************** LA MODAL */
+/******************** ASIDE */
+aside {
+    display: none;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 630px;
+    height: 688px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #FFF;
+}
+
+.modal-wrapp {
+    background-color: #fff;
+}
+
+/******* BOUTON DE FERMETURE */
+aside button {
+    display: flex;
+    justify-content: flex-end;
+    width: 5px;
+    height: 5px;
+    padding: 15px 20px;
+    margin: 0 93%;
+    border: none;
+    background-color: #fff;
+}
+
+/******* LE TITRE DANS ASIDE */
+aside div h1 {
+    text-align: center;
+    font-family: "Work Sans", sans-serif;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: #000;
+}
+
+/****** CONTENEUR DES MINIATURES */
+.image-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    height: 400px;
+    gap: 10px;
+    border-radius: 10px;
+    background: #FFF;
+    margin: 50px;
+    padding: 20px 0;
+}
+
+/****** ICONE CORBEILLE */
+.image-container .fa-trash-can {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 10px;
+    right: -80px;
+    width: 20px;
+    height: 20px;
+    color: #FFF;
+    background-color: #000;
+}
+
+/********** DIV DU BOUTTON */
+.container-boutton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 100px;
+    width: 100%;
+    gap: 30px;
+}
+
+/****** BOUTON DU BAS */
+.ajoutfoto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 237px;
+    height: 36px;
+    border: 1px solid #1D6154;
+    border-radius: 25px;
+    background-color: #1D6154;
+    color: #fff;
+}
+
+/****** BARRE CENTRALE */
+.barre-centrale {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 3px;
+    background-color: #B3B3B3;
+    transform: translate(-50%, -50%);
 }
