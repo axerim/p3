@@ -49,7 +49,17 @@ const createGallery = data => {
         iconePoubelle.src = './assets/icone/trash-can-solid.png';
         img.appendChild(iconePoubelle)
         iconePoubelle.setAttribute('diplay', 'flex')
+        
     }
+
+    iconePoubelle.addEventListener('click', () => (
+        function removeImage() {
+            let image = document.getElementById('imager');
+            let image = document.getElementById('myImage');
+            imageContainer.removeChild(image);
+        }
+    ))
+    if ()
 
 };
 
