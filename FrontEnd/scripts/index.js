@@ -11,6 +11,7 @@ const modal = document.getElementById('modal')
 const modalBtnClose = document.getElementById('modal-btn-close')
 const modalGallery = document.getElementById('modal-gallery')
 const iconePoubelle = document.getElementById('icone-poubelle')
+const body = document.getElementById('body')
 
 const createGallery = data => {
     gallery.innerHTML = '';
@@ -31,10 +32,12 @@ const createGallery = data => {
 
         gallery.appendChild(figure);
     })
+
     /************** Gallerie dans la modal */
     if (editModal.addEventListener('click', () => {
         modal.style.display = 'block'
     })) {
+        body.setAttribute('dplay', 'none')
         modalGallery = createGallery
         figure.setAttribute('width', '630')
         figure.setAttribute('width', '688')
