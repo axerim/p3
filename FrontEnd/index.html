@@ -13,21 +13,24 @@
     <meta name="description" content="">
     <link rel="stylesheet" href="./assets/style.css">
     <script type="module" src="./scripts/index.js" defer></script>
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <div class="mode-edition hidden">
-        <i class="fa-regular fa-pen-to-square"></i>
-        <p>Mode édition</p>
+    <div class="banner">
+        <button class="button">
+            <img src="./assets/icons/edit.png" alt="bouton édition" />
+            <span>Mode édition</span>
+        </button>
     </div>
-    <header>
+    <header id="header">
         <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
         <nav>
             <ul>
                 <li><a href="index.html">projets</a></li>
                 <li>contact</li>
-                <li><a href="login.html">login</a></li>
+                <li><a id="a-login" href="login.html">login</a></li>
                 <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
             </ul>
         </nav>
@@ -35,7 +38,7 @@
     <main>
         <section id="introduction">
             <figure>
-                <img src="./assets/images/sophie-bluel.png" alt="Sophie Bluel">
+                <img src="./assets/images/sophie-bluel.png" alt="">
             </figure>
             <article>
                 <h2>Designer d'espace</h2>
@@ -48,108 +51,19 @@
                     décorateur(trice)</p>
             </article>
         </section>
-
         <section id="portfolio">
-            <div class="administration">
-                <h2>Mes Projets</h2>
-                <a href="#modal1" class="modification js-modal hidden">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                    <p>modifier</p>
-                </a>
-            </div>
-
-            <aside id="modal1" class="modal hidden" aria-hidden="true" role="modal" aria-modal="false" aria-labelledby="titlmodal">
-                <button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
-                <div class="modal-wrapp js-modal-stop">
-                    <h1 id="titlmodal">Galerie photo</h1>
-
-                    <div class="image-container">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/chuttersnap.png" alt="lampe">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/spacejoy-unsplash.png" alt="salon">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/rezha-ramadhan.png" alt="réstaurant">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/ahmed-amir.png" alt="salon">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/lea.png" alt="décoration">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/jean-philippe-delberghe.png" alt="etagere">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/inside-weather.png" alt="sofa">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/nathan-van-egmond.png" alt="Chambre à coucher">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/spacejoy.png" alt="salon">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/michal-mancewicz.png" alt="barre">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <img src="assets/images/miniature/barun-ghosh.png" alt="restaurant">
-                    </div>
-
-                    <div class="container-boutton">
-                        <div class="barre-centrale"></div>
-                        <button class="ajoutfoto" type="button">Ajouter une photo</button>
-                    </div>
-
-                </div>
-            </aside>
+            <h2>Mes Projets
+                <button id="edit-modal" class="button">
+                    <img src="./assets/icons/edit.svg" alt="bouton édition" />
+                    <span>Mode édition</span>
+                </button>
+            </h2>
 
             <div class="filter-buttons"> <!-- Filtre -->
                 <button id="filter-all" class="filter-button active">Tous</button>
-                <!--
-                <button class="filter-button">Objets</button>
-                <button class="filter-button">Appartements</button>
-                <button class="filter-button">Hotels & restaurants</button>
-                -->
             </div>
 
             <div class="gallery">
-                <!-- <figure>
-                    <img src="assets/images/abajour-tahina.png" alt="Abajour Tahina">
-                    <figcaption>Abajour Tahina</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/appartement-paris-v.png" alt="Appartement Paris V">
-                    <figcaption>Appartement Paris V</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/restaurant-sushisen-londres.png" alt="Restaurant Sushisen - Londres">
-                    <figcaption>Restaurant Sushisen - Londres</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/la-balisiere.png" alt="Villa “La Balisiere” - Port Louis">
-                    <figcaption>Villa “La Balisiere” - Port Louis</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/structures-thermopolis.png" alt="Structures Thermopolis">
-                    <figcaption>Structures Thermopolis</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/appartement-paris-x.png" alt="Appartement Paris X">
-                    <figcaption>Appartement Paris X</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/le-coteau-cassis.png" alt="Pavillon “Le coteau” - Cassis">
-                    <figcaption>Pavillon “Le coteau” - Cassis</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/villa-ferneze.png" alt="Villa Ferneze - Isola d’Elba">
-                    <figcaption>Villa Ferneze - Isola d’Elba</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/appartement-paris-xviii.png" alt="Appartement Paris XVIII">
-                    <figcaption>Appartement Paris XVIII</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/bar-lullaby-paris.png" alt="Bar “Lullaby” - Paris">
-                    <figcaption>Bar “Lullaby” - Paris</figcaption>
-                </figure>
-                <figure>
-                    <img src="assets/images/hotel-first-arte-new-delhi.png" alt="Hotel First Arte - New Delhi">
-                    <figcaption>Hotel First Arte - New Delhi</figcaption>
-                </figure> -->
             </div>
         </section>
 
@@ -167,12 +81,17 @@
             </form>
         </section>
 
-        <!-- Section Administrateur ajoutée -->
-        <section class="section-admin hidden">
-            <h2>Mode Administrateur</h2>
-            <p>Vous êtes connecté en mode administrateur.</p>
-            <!-- Ajoutez ici les options d'administration -->
-        </section>
+        <div id="modal" class="modal">
+            <div class="modal-main">
+                <btn id="modal-btn-close">X</btn>
+                <h1>Galerie photo</h1>
+                <section class="gallery" id="modal-gallery">
+                    <img src="./assets/icons/" id="icone-poubelle" alt="icone poubelle">
+                </section>
+                <btn id="btn-add-picture">Ajouter une photo</btn>
+            </div>
+        </div>
+
     </main>
 
     <footer>
@@ -181,10 +100,6 @@
                 <li>Mentions Légales</li>
             </ul>
         </nav>
-        <div class="hidden">
-            <p>email: sophie.bluel@test.tld</p>
-            <p>pass: S0phie</p>
-        </div>
     </footer>
 </body>
 

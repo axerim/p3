@@ -10,12 +10,10 @@ body {
 }
 
 .filter-buttons button {
-    width: 100px;
-    height: 37px;
     background-color: white;
     color: black;
     border: 1px solid #1D6154;
-    border-radius: 25px;
+    border-radius: 20px;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -24,10 +22,10 @@ body {
     margin: 4px 2px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -ms-border-radius: 25px;
-    -o-border-radius: 25px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
 }
 
 .filter-buttons button:hover {
@@ -40,157 +38,272 @@ body {
     color: white;
 }
 
-/* Classe pour masquer les éléments */
-.hidden {
-    display: none;
-    visibility: hidden;
-}
-
-/* Correction de la règle pour .section-admin */
-.section-admin {
+/*** mode Admin ***/
+#edit-modal {
     display: none;
 }
 
-.mode-edition {
+.banner {
+    width: 100%;
+    background-color: black;
+    height: 59px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.button {
+    background-color: transparent;
+    border: none;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 59px;
-    margin: 0;
-    padding: 0;
-    color: white;
-    background-color: black;
+    cursor: pointer;
 }
 
-/********************************/
-/********************************/
-/********************************/
+button span {
+    padding-left: 10px;
+}
 
-.administration {
+#portfolio h2 {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    gap: 31px;
 }
 
-.modification {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
+#portfolio button {
+    margin-left: 20px;
 }
 
-.administration i, .administration p {
-    padding: 10px 0;
-    margin: 0;
+#portfolio span {
+    color: black;
 }
 
-/***************** LA MODAL */
-/******************** ASIDE */
-aside {
+nav li a {
+    text-decoration: none;
+    color: black;
+}
+
+
+nav li a:hover {
+    color: #B1663C;
+}
+
+/*** Modal ***/
+.modal {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: auto;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.3);
     display: none;
 }
 
-.modal {
+.modal-main {
+    border-radius: 5px;
+    width: 630px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 35px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    background-color: white;
+}
+
+#modal-btn-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: large;
+}
+
+input[type="submit"],
+#btn-add-picture {
+    font-family: 'Syne';
+    font-weight: 700;
+    color: white;
+    background-color: #1D6154;
+    margin: 2em auto;
+    width: 180px;
+    text-align: center;
+    border-radius: 60px;
+    cursor: pointer;
+}
+
+#modal-btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    /* display: flex; */
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-main h1 {
+    font-family: 'Work Sans';
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 30px;
+    color: black;
+    margin-top: 60px;
+}
+
+.modal .gallery {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 50px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 80px 80px 80px 80px 80px;
+    grid-column-gap: 10px;
+    grid-row-gap: 20px;
+    width: auto;
+    border-bottom: 1px solid rgba(179, 179, 179, 1);
+}
+
+.modal .gallery img {
+    height: 107px;
+    object-fit: cover;
+}
+
+.modal .gallery figure {
+    position: relative;
+}
+
+.modal .gallery figure .icon {
+    position: absolute;
+    top: 5px;
+    height: 17px;
+    width: 17px;
+    cursor: pointer;
+}
+
+.garbage-icon {
+    right: 5px;
+}
+
+.move-icon {
+    right: 25px;
+}
+
+.modal .gallery figure figcaption {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+}
+
+.modal .modal-main #btn-add-picture {
+    height: 36px;
+    width: 237px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*** Form Add Picture ***/
+#form-add-picture {
+    display: none;
+    width: 440px;
+}
+
+#form-add-picture input[type="submit"] {
+    height: 36px;
+}
+
+hr {
+    margin-top: 50px;
+    width: 100%;
+    border: 1px solid #B3B3B3;
+}
+
+#container-picture {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 630px;
-    height: 688px;
-    margin: 0 auto;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #FFF;
+    width: 100%;
+    background-color: #E8F1F7;
+    border-radius: 3px;
+    height: 169px;
 }
 
-.modal-wrapp {
-    background-color: #fff;
+#container-picture img {
+    width: 58px;
+    height: 58px;
+    max-width: 440px;
+    max-height: 169px;
 }
 
-/******* BOUTON DE FERMETURE */
-aside button {
-    display: flex;
-    justify-content: flex-end;
-    width: 5px;
-    height: 5px;
-    padding: 15px 20px;
-    margin: 0 93%;
-    border: none;
-    background-color: #fff;
-}
-
-/******* LE TITRE DANS ASIDE */
-aside div h1 {
+#container-picture label {
+    font-family: 'Work Sans';
+    font-weight: 500;
+    color: #306685;
+    font-size: 14px;
+    line-height: 16px;
+    background-color: #CBD6DC;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 180px;
     text-align: center;
-    font-family: "Work Sans", sans-serif;
-    font-size: 26px;
+    border-radius: 50px;
+    cursor: pointer;
+    height: 36px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container-picture span {
+    font-family: 'Work Sans';
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
-    color: #000;
-}
-
-/****** CONTENEUR DES MINIATURES */
-.image-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: auto;
-    height: 400px;
-    gap: 10px;
-    border-radius: 10px;
-    background: #FFF;
-    margin: 50px;
-    padding: 20px 0;
-}
-
-/****** ICONE CORBEILLE */
-.image-container .fa-trash-can {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    top: 10px;
-    right: -80px;
-    width: 20px;
-    height: 20px;
-    color: #FFF;
-    background-color: #000;
-}
-
-/********** DIV DU BOUTTON */
-.container-boutton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    font-size: 10px;
+    line-height: 12px;
     text-align: center;
-    height: 100px;
-    width: 100%;
-    gap: 30px;
+    color: #444444;
 }
 
-/****** BOUTON DU BAS */
-.ajoutfoto {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 237px;
-    height: 36px;
-    border: 1px solid #1D6154;
-    border-radius: 25px;
-    background-color: #1D6154;
-    color: #fff;
+input[type="file"] {
+    display: none;
 }
 
-/****** BARRE CENTRALE */
-.barre-centrale {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    height: 3px;
-    background-color: #B3B3B3;
-    transform: translate(-50%, -50%);
+#form-add-picture .disabled {
+    background-color: #A7A7A7;
+    cursor: not-allowed;
+}
+
+#icone-poubelle{
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 9px;
+    height: 11px;
 }

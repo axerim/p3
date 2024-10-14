@@ -1,199 +1,111 @@
-import { getWorks, getCategories, postLogin } from "./api.js";
+import { getWorks, getCategories } from "./api.js";
 
 const gallery = document.querySelector('.gallery');
 const filterButtons = document.querySelector('.filter-buttons');
 const filterAll = document.getElementById('filter-all');
-
-let lastClickedButton = null;
+const banner = document.querySelector('.banner')
+const header = document.getElementById('header')
+const editModal = document.getElementById('edit-modal')
+const aLogin = document.getElementById("a-login")
+const modal = document.getElementById('modal')
+const modalBtnClose = document.getElementById('modal-btn-close')
+const modalGallery = document.getElementById('modal-gallery')
+const iconePoubelle = document.getElementById('icone-poubelle')
 
 const createGallery = data => {
-    const figure = document.createElement('figure');
+    gallery.innerHTML = '';
 
-    const img = document.createElement('img');
-    img.src = data.imageUrl;
-    img.alt = data.title;
+    data.forEach(item => {
+        const figure = document.createElement('figure');
 
-    figure.appendChild(img);
+        const img = document.createElement('img');
+        img.src = item.imageUrl;
+        img.alt = item.title;
 
-    const figCaption = document.createElement('figcaption');
-    figCaption.innerHTML = data.title;
+        figure.appendChild(img);
 
-    figure.appendChild(figCaption);
+        const figCaption = document.createElement('figcaption');
+        figCaption.innerHTML = item.title;
 
-    gallery.appendChild(figure);
-};
+        figure.appendChild(figCaption);
 
-const handleButtonClick = (button, filterFunction) => {
-    if (lastClickedButton) {
-        lastClickedButton.style.backgroundColor = '';
-        lastClickedButton.style.color = '';
+        gallery.appendChild(figure);
+    })
+    /************** Gallerie dans la modal */
+    if (editModal.addEventListener('click', () => {
+        modal.style.display = 'block'
+    })) {
+        modalGallery = createGallery
+        figure.setAttribute('width', '630')
+        figure.setAttribute('width', '688')
+        figure.setAttribute('position', 'relative')
+        figure.setAttribute('display', 'inline-bloc')
+
+        img.setAttribute('width', '78')
+        img.setAttribute('height', '104')
+        iconePoubelle.src = './assets/icone/trash-can-solid.png';
+        img.appendChild(iconePoubelle)
+        iconePoubelle.setAttribute('diplay', 'flex')
     }
-    button.style.backgroundColor = '#1D6154';
-    button.style.color = 'white';
-    lastClickedButton = button;
 
-    filterFunction();
 };
 
-const handleButtonHover = (button) => {
-    if (button !== lastClickedButton) {
-        button.style.backgroundColor = '#1D6154';
-        button.style.color = 'white';
-    }
-};
-
-const handleButtonMouseOut = (button) => {
-    if (button !== lastClickedButton) {
-        button.style.backgroundColor = '';
-        button.style.color = '';
-    }
-};
-
-filterAll.addEventListener('click', () => {
-    handleButtonClick(filterAll, () => {
-        getWorks().then(data => {
-            gallery.innerHTML = '';
-            data.forEach(item => createGallery(item));
-        });
-    });
-});
-
-filterAll.addEventListener('mouseover', () => {
-    handleButtonHover(filterAll);
-});
-
-filterAll.addEventListener('mouseout', () => {
-    handleButtonMouseOut(filterAll);
-});
 
 const createCategories = data => {
-    const button = document.createElement('button');
-    button.setAttribute('class', 'filter-button');
-    button.innerHTML = data.name;
 
-    button.addEventListener('click', () => {
-        handleButtonClick(button, () => {
+    data.forEach(item => {
+        const button = document.createElement('button');
+        button.setAttribute('class', 'filter-button');
+        button.innerHTML = item.name;
+
+        button.addEventListener('click', () => {
+
+            activeFilterButton(button)
             getWorks().then(works => {
-                const filteredData = works.filter(item => item.categoryId === data.id);
-                gallery.innerHTML = '';
-                filteredData.forEach(item => createGallery(item));
+                const filteredData = works.filter(element => element.categoryId === item.id);
+                createGallery(filteredData);
             });
-        });
-    });
+        })
 
-    button.addEventListener('mouseover', () => {
-        handleButtonHover(button);
-    });
+        filterButtons.appendChild(button);
+    })
 
-    button.addEventListener('mouseout', () => {
-        handleButtonMouseOut(button);
-    });
-
-    filterButtons.appendChild(button);
 };
 
-getWorks().then(data => {
-    gallery.innerHTML = '';
-    data.forEach(item => createGallery(item));
-});
+getWorks().then(data => createGallery(data))
 
-getCategories().then(data => data.forEach(item => createCategories(item)));
+getCategories().then(data => createCategories(data));
 
-// Gestion de la connexion
-const loginForm = document.getElementById('login-form');
-const email = document.getElementById('email');
-const password = document.getElementById('password');
+filterAll.addEventListener('click', () => {
+    activeFilterButton(filterAll)
+    getWorks().then(data => createGallery(data))
+})
 
-loginForm.addEventListener('submit', event => {
-    event.preventDefault(); // Empêche la soumission du formulaire par défaut
-
-    const data = {
-        email: email.value,
-        password: password.value
-    };
-
-    postLogin(data)
-        .then(data => {
-            if (data.token) {
-                window.location.href = 'index.html';
-                localStorage.token = data.token;
-            } else {
-                alert('Erreur lors de la connexion. Veuillez réessayer.');
-            }
-        })
-        .catch(() => alert("L'api n'est pas disponible"));
-});
-
-// Vérifier si l'utilisateur est en mode administrateur
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === 'true') {
-    const modeEdition = document.querySelector('.mode-edition');
-    const modificationLink = document.querySelector('.modification');
-    const modal = document.querySelector('#modal1');
-
-    if (modeEdition) {
-        modeEdition.classList.remove('hidden');
-    }
-    if (modificationLink) {
-        modificationLink.classList.remove('hidden');
-    }
-    if (modal) {
-        modal.classList.remove('hidden');
-    }
+const activeFilterButton = button => {
+    const filtersButtons = document.querySelectorAll('.filter-button')
+    filtersButtons.forEach(element => {
+        element.classList.remove('active')
+    })
+    button.classList.add('active')
 }
 
-// Code pour ouvrir et fermer la modal
-let modal = null;
+/*** Mode Admin ***/
+if (localStorage.token) {
+    banner.style.display = 'flex'
+    header.style.marginTop = '79px'
+    filterButtons.style.display = 'none'
+    editModal.style.display = 'flex'
+    aLogin.innerHTML = 'logout'
+}
 
-const openModal = function(e) {
-    e.preventDefault();
-    const target = document.querySelector(e.target.getAttribute('href'));
-    if (!target) return;
+aLogin.addEventListener('click', () => localStorage.clear())
 
-    // Affiche le modal
-    target.style.display = 'block';
-    target.removeAttribute('aria-hidden');
-    target.setAttribute('aria-modal', 'true');
+/*** Modal ***/
+editModal.addEventListener('click', () => {
+    modal.style.display = 'block'
+})
 
-    // Sauvegarde de la boîte modal cible qui a été ouverte
-    modal = target;
+modalBtnClose.addEventListener('click', () => {
+    modal.style.display = 'none'
+})
 
-    // Ajoute des écouteurs d'événements pour fermer la modal
-    modal.addEventListener('click', closeModal);
-    modal.querySelector('.js-modal-close').addEventListener('click', closeModal);
-    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation);
-};
-
-const closeModal = function(e) {
-    if (modal === null) return;
-    e.preventDefault();
-
-    // Remasquer la boîte modal
-    modal.style.display = "none";
-    modal.setAttribute('aria-hidden', 'true');
-    modal.removeAttribute('aria-modal');
-
-    // Supprime les écouteurs d'événements
-    modal.removeEventListener('click', closeModal);
-    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal);
-    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation);
-
-    // Réinitialise la variable modal
-    modal = null;
-};
-
-const stopPropagation = function(e) {
-    e.stopPropagation();
-};
-
-// Ajoute des écouteurs d'événements pour ouvrir la modal
-document.querySelectorAll('.js-modal').forEach(a => {
-    a.addEventListener('click', openModal);
-});
-
-// Fermer la modal avec le bouton échap
-document.addEventListener('keydown', function(e) {
-    if (e.key === "Escape" || e.key === "Esc") {
-        closeModal(e);
-    }
-});
