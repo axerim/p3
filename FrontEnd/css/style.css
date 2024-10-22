@@ -138,8 +138,9 @@ nav li a:hover {
     font-size: large;
 }
 
-input[type="submit"],
-#btn-add-picture {
+input[type="submit"], 
+#btn-add-picture, 
+#submit-add-picture {
     font-family: 'Syne';
     font-weight: 700;
     color: white;
@@ -299,12 +300,59 @@ input[type="file"] {
     cursor: not-allowed;
 }
 
-#icone-poubelle{
-    display: none;
-    display: inline-block
+/****** Ajouter une photo */
+
+/* #form-add-picture {
+    padding-top: 10px;
+    margin-top: 10px;
+    gap: 50px;
+} */
+
+.form-add-picture {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    /* width: 100%; */
+    background-color: #ffffff;
+    /* border-radius: 3px; */
+    /* padding: 30px; */
+    /* margin-top: 100px; */
+    /* margin-bottom: 100px; */
+}
+
+.form-add-picture input ,#select-category {
+    width: 420px;
+    height: 51px;
+}
+
+/***** Boutton fleche */
+#modal-btn-back {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 9px;
-    height: 11px;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: large;
+}
+
+/***** Cache les message d'erreur */
+
+.input-error {
+
+    display: none;
+}
+
+/***** Espacement */
+
+.espace {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }

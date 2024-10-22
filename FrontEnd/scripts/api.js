@@ -15,3 +15,10 @@ export const postLogin = data => fetch(URL_LOGIN, {
         'Content-Type': 'application/json'
     }
 }).then(res => res.json())
+
+export const deleteWork = id => fetch(`${URL_WORKS}/${id}`, {
+    method: 'DELETE',
+    headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+    }
+})

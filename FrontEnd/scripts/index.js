@@ -1,4 +1,4 @@
-import { getWorks, getCategories } from "./api.js";
+import { getWorks, getCategories, deleteWork } from "./api.js";
 
 const gallery = document.querySelector('.gallery');
 const filterButtons = document.querySelector('.filter-buttons');
@@ -10,13 +10,27 @@ const aLogin = document.getElementById("a-login")
 const modal = document.getElementById('modal')
 const modalBtnClose = document.getElementById('modal-btn-close')
 const modalGallery = document.getElementById('modal-gallery')
-const iconePoubelle = document.getElementById('icone-poubelle')
-const body = document.getElementById('body')
+const btnAddPicture = document.getElementById('btn-add-picture')
+const formAddPicture = document.getElementById('form-add-picture')
+const submitAddPicture = document.getElementById('submit-add-picture')
+const form = document.querySelector('.form-add-picture');
+const fileInput = document.getElementById('file-upload');
+const titleInput = document.getElementById('title');
+const categorySelect = document.getElementById('select-category');
+const submitButton = document.getElementById('submit-add-picture');
+const fileError = document.getElementById('file-error');
+const titleError = document.getElementById('title-error');
+const selectError = document.getElementById('select-error');
+const preview = document.getElementById('preview');
+const modalBtnBack = document.getElementById('modal-btn-back');
+
 
 const createGallery = data => {
     gallery.innerHTML = '';
+    modalGallery.innerHTML = ''
 
     data.forEach(item => {
+        // Création du DOM pour la galerie de la page d'accueil
         const figure = document.createElement('figure');
 
         const img = document.createElement('img');
@@ -31,35 +45,36 @@ const createGallery = data => {
         figure.appendChild(figCaption);
 
         gallery.appendChild(figure);
+
+        // Création du DOM pour la galerie de la modale
+        const modalFigure = document.createElement('figure');
+
+        const modalImg = document.createElement('img');
+        modalImg.src = item.imageUrl;
+        modalImg.alt = item.title;
+
+        modalFigure.appendChild(modalImg)
+
+        // Ajout dynamiquement de l'ico de la poubelle
+        const garbageIcon = document.createElement('img')
+        garbageIcon.alt = 'poubelle'
+        garbageIcon.src = './assets/icons/garbage.png'
+        garbageIcon.setAttribute('class', 'icon garbage-icon')
+        modalFigure.appendChild(garbageIcon)
+
+        // On écoute l'événement au click sur la poubelle
+        garbageIcon.addEventListener('click', () => {
+            // On supprime en bdd le travail
+            deleteWork(item.id).then(() => {
+                console.log(`Le travail avec l'id: ${item.id} a bien été supprimé`)
+                return getWorks()
+            }).then(data => createGallery(data))
+        })
+
+
+        modalGallery.appendChild(modalFigure)
+
     })
-
-    /************** Gallerie dans la modal */
-    if (editModal.addEventListener('click', () => {
-        modal.style.display = 'block'
-    })) {
-        body.setAttribute('dplay', 'none')
-        modalGallery = createGallery
-        figure.setAttribute('width', '630')
-        figure.setAttribute('width', '688')
-        figure.setAttribute('position', 'relative')
-        figure.setAttribute('display', 'inline-bloc')
-
-        img.setAttribute('width', '78')
-        img.setAttribute('height', '104')
-        iconePoubelle.src = './assets/icone/trash-can-solid.png';
-        img.appendChild(iconePoubelle)
-        iconePoubelle.setAttribute('diplay', 'flex')
-        
-    }
-
-    iconePoubelle.addEventListener('click', () => (
-        function removeImage() {
-            let image = document.getElementById('imager');
-            let image = document.getElementById('myImage');
-            imageContainer.removeChild(image);
-        }
-    ))
-    if ()
 
 };
 
@@ -122,3 +137,128 @@ modalBtnClose.addEventListener('click', () => {
     modal.style.display = 'none'
 })
 
+
+
+
+
+
+
+
+/*** Ajouter une photo ***/
+btnAddPicture.addEventListener('click', () => {
+    modal.style.display = 'hidden'
+    formAddPicture.style.display = 'flex'
+})
+
+    // Ajout dynamiquement de l'ico de la flech
+    const arrowLeft = document.createElement('img')
+    arrowLeft.alt = 'fleche'
+    arrowLeft.src = './assets/icons/arrow-left.png'
+    arrowLeft.setAttribute('class', 'icon garbage-icon')
+    modalFigure.appendChild(formAddPicture)
+
+    // On écoute l'événement au click sur la poubelle
+    arrowLeft.addEventListener('click', () => {
+        formAddPicture.style.display = 'none'
+    })
+
+/*** Ajoute le bouton fleche ***/
+modalBtnBack.addEventListener('click', () => {
+    modal.style.display = 'none'
+})
+
+/*** Affiche la photo jouter ***/
+
+// document.fileInput.addEventListener('change', function(event) {
+//     fileInput = event.target;
+//     const preview = document.getElementById('preview');
+
+//     if (fileInput.files.length > 0) {
+//         const file = fileInput.files[0];
+//         const reader = new FileReader();
+
+//         reader.onload = function(e) {
+//             preview.src = e.target.result;
+//         };
+
+//         reader.readAsDataURL(file);
+//     } else {
+//         preview.src = './assets/icons/picture.png'; // Réinitialiser l'image de prévisualisation
+//     }
+// });
+document.getElementById('file-upload').addEventListener('change', function(event) {
+    fileInput = event.target;
+    preview = document.getElementById('preview');
+    fileError = document.getElementById('file-error');
+
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        // Vérifier si le fichier est une image et si sa taille est inférieure à 4 Mo
+        if (file.type.startsWith('image/') && file.size <= 4 * 1024 * 1024) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                fileError.style.display = 'none'; // Masquer le message d'erreur
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            fileError.style.display = 'block'; // Afficher le message d'erreur
+        }
+    } else {
+        fileError.style.display = 'block'; // Afficher le message d'erreur
+    }
+});
+
+
+
+     // Validation du formulaire
+         /** 
+     *<div id="file-error" class="input-error">
+     * <div id="title-error" class="input-error">
+     * <div id="select-error" class="input-error">
+     */
+
+    //  submitAddPicture.addEventListener('click', () => {
+
+    //  })
+
+
+     function validateForm() {
+        let isValid = true;
+
+        // Vérification de l'upload de fichier
+        if (fileInput.files.length === 0) {
+            fileError.style.display = 'block';
+            isValid = false;
+        } else {
+            fileError.style.display = 'none';
+        }
+
+        // Vérification du titre
+        if (titleInput.value.length < 2) {
+            titleError.style.display = 'block';
+            isValid = false;
+        } else {
+            titleError.style.display = 'none';
+        }
+
+        // Vérification de la catégorie
+        if (categorySelect.value === "") {
+            selectError.style.display = 'block';
+            isValid = false;
+        } else {
+            selectError.style.display = 'none';
+        }
+
+        // Activation/désactivation du bouton submit
+        // submitButton.classList.toggle('disabled', !isValid);
+        // submitButton.disabled = !isValid;
+        if (isValid) {
+            this.submit();
+        }
+
+        return isValid;
+    }
