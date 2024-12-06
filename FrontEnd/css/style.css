@@ -136,10 +136,11 @@ nav li a:hover {
     justify-content: center;
     font-weight: 600;
     font-size: large;
+    border: none;
 }
 
-input[type="submit"], 
-#btn-add-picture, 
+input[type="submit"],
+#btn-add-picture,
 #submit-add-picture {
     font-family: 'Syne';
     font-weight: 700;
@@ -150,19 +151,6 @@ input[type="submit"],
     text-align: center;
     border-radius: 60px;
     cursor: pointer;
-}
-
-#modal-btn-back {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    cursor: pointer;
-    height: 40px;
-    width: 40px;
-    /* display: flex; */
-    display: none;
-    align-items: center;
-    justify-content: center;
 }
 
 .modal-main h1 {
@@ -321,7 +309,8 @@ input[type="file"] {
     /* margin-bottom: 100px; */
 }
 
-.form-add-picture input ,#select-category {
+.form-add-picture input,
+#select-category {
     width: 420px;
     height: 51px;
 }
@@ -341,6 +330,7 @@ input[type="file"] {
     justify-content: center;
     font-weight: 600;
     font-size: large;
+    border: none
 }
 
 /***** Cache les message d'erreur */

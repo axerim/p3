@@ -1,4 +1,4 @@
-import { getWorks, getCategories, deleteWork } from "./api.js";
+import { getWorks, getCategories, deleteWork, postWork } from "./api.js";
 
 const gallery = document.querySelector('.gallery');
 const filterButtons = document.querySelector('.filter-buttons');
@@ -12,17 +12,18 @@ const modalBtnClose = document.getElementById('modal-btn-close')
 const modalGallery = document.getElementById('modal-gallery')
 const btnAddPicture = document.getElementById('btn-add-picture')
 const formAddPicture = document.getElementById('form-add-picture')
-const submitAddPicture = document.getElementById('submit-add-picture')
-const form = document.querySelector('.form-add-picture');
-const fileInput = document.getElementById('file-upload');
-const titleInput = document.getElementById('title');
-const categorySelect = document.getElementById('select-category');
-const submitButton = document.getElementById('submit-add-picture');
-const fileError = document.getElementById('file-error');
-const titleError = document.getElementById('title-error');
-const selectError = document.getElementById('select-error');
-const preview = document.getElementById('preview');
 const modalBtnBack = document.getElementById('modal-btn-back');
+const modalTitle = document.querySelector('#modal h1')
+// variables du DOM pour le formulaire d'ajout d'un travail
+const fileUpload = document.getElementById('file-upload')
+const preview = document.getElementById('preview')
+const labelFileUpload = document.querySelector('#container-picture label')
+const spanFileUpload = document.querySelector('#container-picture span')
+const selectCategory = document.getElementById('select-category')
+const inputTile = document.getElementById('title')
+const formAddWork = document.querySelector('#form-add-picture form')
+const submitFormAddPicture = document.querySelector('#form-add-picture input[type="submit"]')
+
 
 
 const createGallery = data => {
@@ -79,7 +80,10 @@ const createGallery = data => {
 };
 
 
+// Création des filtres par catégories en fonction des data en paramètre 
+// idem pour le select des categories du formulaire d'ajout de travail
 const createCategories = data => {
+    selectCategory.innerHTML = ''
 
     data.forEach(item => {
         const button = document.createElement('button');
@@ -96,6 +100,12 @@ const createCategories = data => {
         })
 
         filterButtons.appendChild(button);
+
+        // ajouter des options de categorie au select
+        const option = document.createElement('option')
+        option.setAttribute('value', item.id)
+        option.innerHTML = item.name
+        selectCategory.appendChild(option)
     })
 
 };
@@ -138,127 +148,47 @@ modalBtnClose.addEventListener('click', () => {
 })
 
 
-
-
-
-
-
-
 /*** Ajouter une photo ***/
 btnAddPicture.addEventListener('click', () => {
-    modal.style.display = 'hidden'
+    modalGallery.style.display = 'none'
     formAddPicture.style.display = 'flex'
+    modalTitle.innerHTML = 'Ajout photo'
+    btnAddPicture.style.display = 'none'
 })
 
-    // Ajout dynamiquement de l'ico de la flech
-    const arrowLeft = document.createElement('img')
-    arrowLeft.alt = 'fleche'
-    arrowLeft.src = './assets/icons/arrow-left.png'
-    arrowLeft.setAttribute('class', 'icon garbage-icon')
-    modalFigure.appendChild(formAddPicture)
-
-    // On écoute l'événement au click sur la poubelle
-    arrowLeft.addEventListener('click', () => {
-        formAddPicture.style.display = 'none'
-    })
 
 /*** Ajoute le bouton fleche ***/
 modalBtnBack.addEventListener('click', () => {
-    modal.style.display = 'none'
+    modalGallery.style.display = 'grid'
+    formAddPicture.style.display = 'none'
+    modalTitle.innerHTML = 'Galerie photo'
+    btnAddPicture.style.display = 'flex'
 })
 
-/*** Affiche la photo jouter ***/
+fileUpload.addEventListener('change', () => {
+    const file = fileUpload.files[0]
 
-// document.fileInput.addEventListener('change', function(event) {
-//     fileInput = event.target;
-//     const preview = document.getElementById('preview');
+    console.log(file)
+    labelFileUpload.style.display = 'none'
+    spanFileUpload.style.display = 'none'
+    preview.src = URL.createObjectURL(file)
+    preview.style.height = 'auto'
+    preview.style.width = 'auto'
+})
 
-//     if (fileInput.files.length > 0) {
-//         const file = fileInput.files[0];
-//         const reader = new FileReader();
+formAddPicture.addEventListener('submit', event => {
+    event.preventDefault() // Empêche la soumission du formulaire par défaut
 
-//         reader.onload = function(e) {
-//             preview.src = e.target.result;
-//         };
+    const file = fileUpload.files[0]
 
-//         reader.readAsDataURL(file);
-//     } else {
-//         preview.src = './assets/icons/picture.png'; // Réinitialiser l'image de prévisualisation
-//     }
-// });
-document.getElementById('file-upload').addEventListener('change', function(event) {
-    fileInput = event.target;
-    preview = document.getElementById('preview');
-    fileError = document.getElementById('file-error');
+    const formData = new FormData()
 
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
+    formData.append('image', file)
+    formData.append('title', inputTile.value)
+    formData.append('category', parseInt(selectCategory.value))
 
-        // Vérifier si le fichier est une image et si sa taille est inférieure à 4 Mo
-        if (file.type.startsWith('image/') && file.size <= 4 * 1024 * 1024) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                fileError.style.display = 'none'; // Masquer le message d'erreur
-            };
-
-            reader.readAsDataURL(file);
-        } else {
-            fileError.style.display = 'block'; // Afficher le message d'erreur
-        }
-    } else {
-        fileError.style.display = 'block'; // Afficher le message d'erreur
-    }
-});
-
-
-
-     // Validation du formulaire
-         /** 
-     *<div id="file-error" class="input-error">
-     * <div id="title-error" class="input-error">
-     * <div id="select-error" class="input-error">
-     */
-
-    //  submitAddPicture.addEventListener('click', () => {
-
-    //  })
-
-
-     function validateForm() {
-        let isValid = true;
-
-        // Vérification de l'upload de fichier
-        if (fileInput.files.length === 0) {
-            fileError.style.display = 'block';
-            isValid = false;
-        } else {
-            fileError.style.display = 'none';
-        }
-
-        // Vérification du titre
-        if (titleInput.value.length < 2) {
-            titleError.style.display = 'block';
-            isValid = false;
-        } else {
-            titleError.style.display = 'none';
-        }
-
-        // Vérification de la catégorie
-        if (categorySelect.value === "") {
-            selectError.style.display = 'block';
-            isValid = false;
-        } else {
-            selectError.style.display = 'none';
-        }
-
-        // Activation/désactivation du bouton submit
-        // submitButton.classList.toggle('disabled', !isValid);
-        // submitButton.disabled = !isValid;
-        if (isValid) {
-            this.submit();
-        }
-
-        return isValid;
-    }
+    postWork(formData).then(() => {
+        modal.style.display = 'none'
+        return getWorks()
+    }).then(data => createGallery(data))
+})

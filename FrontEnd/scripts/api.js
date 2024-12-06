@@ -22,3 +22,11 @@ export const deleteWork = id => fetch(`${URL_WORKS}/${id}`, {
         'Authorization': `Bearer ${localStorage.token}`
     }
 })
+
+export const postWork = data => fetch(URL_WORKS, {
+    method: 'POST',
+    headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+    },
+    body: data
+}).then(res => res.json())
