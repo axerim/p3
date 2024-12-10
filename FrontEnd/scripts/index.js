@@ -20,12 +20,14 @@ const preview = document.getElementById('preview')
 const labelFileUpload = document.querySelector('#container-picture label')
 const spanFileUpload = document.querySelector('#container-picture span')
 const selectCategory = document.getElementById('select-category')
-const inputTile = document.getElementById('title')
+const inputTitle = document.getElementById('title')
 const formAddWork = document.querySelector('#form-add-picture form')
 const submitFormAddPicture = document.querySelector('#form-add-picture input[type="submit"]')
+// erreurs formulaire
+const fileError = document.getElementById('file-error')
+const titleError = document.getElementById('title-error')
+const selectError = document.getElementById('select-error')
 
-const submitButton = document.getElementById('submitButton');
-const errorMessage = document.getElementById('errorMessage');
 
 
 const createGallery = data => {
@@ -149,6 +151,20 @@ modalBtnClose.addEventListener('click', () => {
     modal.style.display = 'none'
 })
 
+// on affiche la preview d'origine du formulaire et on le reset
+const resetFormAddWork = () => {
+    labelFileUpload.style.display = "flex"
+    spanFileUpload.style.display = "flex"
+    preview.src = "./assets/icons/picture.png"
+    preview.style.height = '58px'
+    preview.style.width = '58px'
+    fileUpload.value = ''
+    formAddWork.reset()
+
+    fileError.style.display = 'none'
+    titleError.style.display = 'none'
+}
+
 
 /*** Ajouter une photo ***/
 btnAddPicture.addEventListener('click', () => {
@@ -156,6 +172,8 @@ btnAddPicture.addEventListener('click', () => {
     formAddPicture.style.display = 'flex'
     modalTitle.innerHTML = 'Ajout photo'
     btnAddPicture.style.display = 'none'
+
+    resetFormAddWork()
 })
 
 
@@ -165,12 +183,14 @@ modalBtnBack.addEventListener('click', () => {
     formAddPicture.style.display = 'none'
     modalTitle.innerHTML = 'Galerie photo'
     btnAddPicture.style.display = 'flex'
+
+    resetFormAddWork()
 })
 
 // Déclanchement de l'événement ajouter une image
 // Clique de Ajouter une photo pour en séléctionner une
 fileUpload.addEventListener('change', () => {
-    
+
     // ce code récuper la source de l'image dans const file
     const file = fileUpload.files[0]
 
@@ -236,77 +256,67 @@ formAddPicture.addEventListener('submit', event => {
 // la soumission et le rechargement de la page doivent être empecher si les condition ne sont pas respecter
 
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    // Fonction pour vérifier les contraintes
-    const validateForm = () => {
-        const file = fileUpload.files[0];
-        const title = inputTitle.value.trim();
-        const category = selectCategory.value.trim();
 
-        // Réinitialiser le message d'erreur
-        errorMessage.textContent = '';
+// Fonction pour vérifier les contraintes
+const validateForm = () => {
+    const file = fileUpload.files[0];
+    const title = inputTitle.value.trim();
+    const category = selectCategory.value.trim();
+    let isValidated = false
 
-        // Vérifier que tous les champs sont remplis
-        if (!file || !title || !category) {
-            errorMessage.textContent = 'Tous les champs doivent être remplis.';
-            submitButton.disabled = true;
-            return false;
-        }
-
+    if (file?.type !== 'image/jpeg' || file?.type !== 'image/png') {
         // Vérifier le format de l'image
-        if (file.type !== 'image/jpeg' || file.type !== 'image/png') {
-            errorMessage.textContent = 'Le fichier doit être une image JPG ou PNG.';
-            submitButton.disabled = true;
-            return false;
-        }
-
+        fileError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    } else if (file?.size > 4 * 1024 * 1024) {
         // Vérifier la taille de l'image
-        if (file.size > 4 * 1024 * 1024) {
-            errorMessage.textContent = 'La taille de l\'image ne doit pas dépasser 4 Mo.';
-            submitButton.disabled = true;
-            return false;
-        }
-
+        fileError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    } else if (title === "") {
+        titleError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    } else {
         // Si toutes les conditions sont remplies, activer le bouton de soumission
-        submitButton.disabled = false;
-        return true;
-    };
+        submitFormAddPicture.disabled = false;
+        titleError.style.display = 'none'
+        fileError.style.display = 'none'
+        isValidated = true
+    }
 
-    // Ajouter des écouteurs d'événements pour valider le formulaire en temps réel
-    fileUpload.addEventListener('change', validateForm);
-    inputTitle.addEventListener('input', validateForm);
-    selectCategory.addEventListener('change', validateForm);
+    if (isValidated) {
+        submitFormAddPicture.classList.remove('disabled')
+    } else {
+        submitFormAddPicture.classList.add('disabled')
+    }
 
-    formAddPicture.addEventListener('submit', event => {
-        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+    return isValidated;
+};
 
-        if (!validateForm()) {
-            return;
-        }
+// Ajouter des écouteurs d'événements pour valider le formulaire en temps réel
+fileUpload.addEventListener('change', validateForm);
+inputTitle.addEventListener('input', validateForm);
+selectCategory.addEventListener('change', validateForm);
 
-        const file = fileUpload.files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('title', inputTitle.value);
-        formData.append('category', parseInt(selectCategory.value));
+formAddPicture.addEventListener('submit', event => {
+    event.preventDefault(); // Empêche la soumission du formulaire par défaut
 
-        postWork(formData).then(() => {
-            modal.style.display = 'none';
-            return getWorks();
-        }).then(data => {
-            if (validateForm()) {
-                createGallery(data);
-            }
-        });
-    });
+    if (!validateForm()) {
+        return;
+    }
 
-    // Réinitialiser le formulaire lorsqu'on clique sur une image déjà sélectionnée
-    fileUpload.addEventListener('click', () => {
-        fileUpload.value = '';
-        inputTitle.value = '';
-        selectCategory.value = '';
-        errorMessage.textContent = '';
-        submitButton.disabled = true;
-    });
+    const file = fileUpload.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('title', inputTitle.value);
+    formData.append('category', parseInt(selectCategory.value));
+
+    postWork(formData).then(() => {
+        modal.style.display = 'none';
+        return getWorks();
+    }).then(data => createGallery(data));
 });
+

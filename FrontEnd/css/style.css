@@ -336,8 +336,8 @@ input[type="file"] {
 /***** Cache les message d'erreur */
 
 .input-error {
-
     display: none;
+    color: red;
 }
 
 /***** Espacement */
