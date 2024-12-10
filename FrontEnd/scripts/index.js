@@ -24,6 +24,8 @@ const inputTile = document.getElementById('title')
 const formAddWork = document.querySelector('#form-add-picture form')
 const submitFormAddPicture = document.querySelector('#form-add-picture input[type="submit"]')
 
+const submitButton = document.getElementById('submitButton');
+const errorMessage = document.getElementById('errorMessage');
 
 
 const createGallery = data => {
@@ -165,30 +167,146 @@ modalBtnBack.addEventListener('click', () => {
     btnAddPicture.style.display = 'flex'
 })
 
+// Déclanchement de l'événement ajouter une image
+// Clique de Ajouter une photo pour en séléctionner une
 fileUpload.addEventListener('change', () => {
+    
+    // ce code récuper la source de l'image dans const file
     const file = fileUpload.files[0]
 
     console.log(file)
+    // ce code fait disparaitre les label et les span
     labelFileUpload.style.display = 'none'
     spanFileUpload.style.display = 'none'
+
+    // ce code ajout de la source de l'image qu'on séléctionne
     preview.src = URL.createObjectURL(file)
+
+    // ce code permet de redimensionner l'image pour qu'elle ne dépasse pas les dimensions de 600px de largeur et de 400px de hauteur
     preview.style.height = 'auto'
     preview.style.width = 'auto'
 })
 
+
+
+// ce code permet de soumetre le formulaire quand on clique sur le bouton validez
+// il faut que ce code prend en compte quand le boutan est disable (désactiver   )
+/*
 formAddPicture.addEventListener('submit', event => {
-    event.preventDefault() // Empêche la soumission du formulaire par défaut
+
+    // ce code empeche le rechargment de la page
+    event.preventDefault() // Empêche la soumission du formulaire par défaut 
 
     const file = fileUpload.files[0]
 
+    // l'objet " new FormData " formate les data passer en parametres par " postWork " 
     const formData = new FormData()
-
+    // ici est spécifier toute les data qui vont être empécher d'être envoyer vers l'api
     formData.append('image', file)
     formData.append('title', inputTile.value)
     formData.append('category', parseInt(selectCategory.value))
 
+    // postWork (dans le fichier api.js) permet de récuperer les data qu'on passe en parametre 
+    // ce code permet d'envoyer tous les élément formater 
     postWork(formData).then(() => {
+
+        // si sa se passe bien on ferme la modal
         modal.style.display = 'none'
+
+        // si sa se passe bien on récuper les traveaux pour les metre à jour sur la page
         return getWorks()
+
+        // et on crée à nouveau la galerie
     }).then(data => createGallery(data))
 })
+*/
+// s'assurer que chaque champ est bien valide
+// t'an que le champ n'est pas valide, il doit être impossible d'appuyer sur le bouton validez
+// on doit empecher la validation et la fermeture de la page
+// afficher des message d'alert si quelque chose ne vas pas
+// la contrainte est qu'il faut afficher une image qui soit jpg ou png de maximum 4 mo
+// faire des verifications sur le format de l'image (aussi le type de fichier) et de sa taille
+// metre en place la réinitialisation du formulaire d'est qu'on clique sur un image déja séléctionner
+
+
+// avant de recréer la galerie on doit faire de vérification sur :
+// avnt la soumition on doit vérifier :
+// qu'il fichier image au formata png ou jpg de 4mo max à bien été séléctionner
+// il faut empecher la soumition si cette regle n'est respecter
+// la soumission et le rechargement de la page doivent être empecher si les condition ne sont pas respecter
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Fonction pour vérifier les contraintes
+    const validateForm = () => {
+        const file = fileUpload.files[0];
+        const title = inputTitle.value.trim();
+        const category = selectCategory.value.trim();
+
+        // Réinitialiser le message d'erreur
+        errorMessage.textContent = '';
+
+        // Vérifier que tous les champs sont remplis
+        if (!file || !title || !category) {
+            errorMessage.textContent = 'Tous les champs doivent être remplis.';
+            submitButton.disabled = true;
+            return false;
+        }
+
+        // Vérifier le format de l'image
+        if (file.type !== 'image/jpeg' || file.type !== 'image/png') {
+            errorMessage.textContent = 'Le fichier doit être une image JPG ou PNG.';
+            submitButton.disabled = true;
+            return false;
+        }
+
+        // Vérifier la taille de l'image
+        if (file.size > 4 * 1024 * 1024) {
+            errorMessage.textContent = 'La taille de l\'image ne doit pas dépasser 4 Mo.';
+            submitButton.disabled = true;
+            return false;
+        }
+
+        // Si toutes les conditions sont remplies, activer le bouton de soumission
+        submitButton.disabled = false;
+        return true;
+    };
+
+    // Ajouter des écouteurs d'événements pour valider le formulaire en temps réel
+    fileUpload.addEventListener('change', validateForm);
+    inputTitle.addEventListener('input', validateForm);
+    selectCategory.addEventListener('change', validateForm);
+
+    formAddPicture.addEventListener('submit', event => {
+        event.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+        if (!validateForm()) {
+            return;
+        }
+
+        const file = fileUpload.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('title', inputTitle.value);
+        formData.append('category', parseInt(selectCategory.value));
+
+        postWork(formData).then(() => {
+            modal.style.display = 'none';
+            return getWorks();
+        }).then(data => {
+            if (validateForm()) {
+                createGallery(data);
+            }
+        });
+    });
+
+    // Réinitialiser le formulaire lorsqu'on clique sur une image déjà sélectionnée
+    fileUpload.addEventListener('click', () => {
+        fileUpload.value = '';
+        inputTitle.value = '';
+        selectCategory.value = '';
+        errorMessage.textContent = '';
+        submitButton.disabled = true;
+    });
+});
