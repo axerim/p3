@@ -28,6 +28,9 @@ const fileError = document.getElementById('file-error')
 const titleError = document.getElementById('title-error')
 const selectError = document.getElementById('select-error')
 
+// boutton de soumission des donnée dans la modal
+const submitAddPicture = document.getElementById('submit-add-picture')
+
 
 
 const createGallery = data => {
@@ -208,10 +211,10 @@ fileUpload.addEventListener('change', () => {
 })
 
 
-
+/*
 // ce code permet de soumetre le formulaire quand on clique sur le bouton validez
 // il faut que ce code prend en compte quand le boutan est disable (désactiver   )
-/*
+
 formAddPicture.addEventListener('submit', event => {
 
     // ce code empeche le rechargment de la page
@@ -259,6 +262,8 @@ formAddPicture.addEventListener('submit', event => {
 
 
 // Fonction pour vérifier les contraintes
+
+
 const validateForm = () => {
     const file = fileUpload.files[0];
     const title = inputTitle.value.trim();
@@ -320,3 +325,57 @@ formAddPicture.addEventListener('submit', event => {
     }).then(data => createGallery(data));
 });
 
+
+
+/*
+
+submitAddPicture.addEventListener('click', () => { 
+
+    // ferifi si un fichier à été selectionner
+    if (fileUpload.files.length > 0) {
+        let typeFichier = fileUpload.type;
+    }else{
+        fileError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    }
+
+    // verifi le type de l'image
+    if (typeFichier === 'image/jpeg' || typeFichier === 'image/png'){
+        let tailleMax = 4 * 1024 * 1024;
+    }else{
+        fileError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    }
+
+    // verifi la taille de l'image
+    if (typeFichier.size <= tailleMax){
+    }else{
+        fileError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    }
+    
+     // verifi si un titre à été entrer
+    if (inputTitle.value.trim() !== ''){
+    }else{
+        titleError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    }
+
+    // vérifie s'il y à eu une selection
+    if (selectCategory.value !== '')){
+    }else{
+        selectError.style.display = 'block'
+        submitFormAddPicture.disabled = true;
+        isValidated = false
+    }
+
+
+    // Activation et désactivation du boutons de soumission submitAddPicture
+
+    if ()
+
+*/
