@@ -10,7 +10,7 @@ body {
 }
 
 .filter-buttons button {
-    background-color: white;
+    background-color: transparent;
     color: black;
     border: 1px solid #1D6154;
     border-radius: 20px;

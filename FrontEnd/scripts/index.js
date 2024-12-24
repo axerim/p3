@@ -26,10 +26,7 @@ const submitFormAddPicture = document.querySelector('#form-add-picture input[typ
 // erreurs formulaire
 const fileError = document.getElementById('file-error')
 const titleError = document.getElementById('title-error')
-const selectError = document.getElementById('select-error')
 
-// boutton de soumission des donnée dans la modal
-const submitAddPicture = document.getElementById('submit-add-picture')
 
 
 
@@ -145,9 +142,26 @@ if (localStorage.token) {
 
 aLogin.addEventListener('click', () => localStorage.clear())
 
+
+// https://techstacker.com/close-modal-click-outside-vanilla-javascript/
+const dismissModal = e => {
+    if (e.target === modalBtnClose || !e.target.closest('.modal-main')) {
+        modal.style.display = 'none'
+        document.removeEventListener('click', dismissModal, true)
+    }
+}
+
 /*** Modal ***/
 editModal.addEventListener('click', () => {
     modal.style.display = 'block'
+
+    modalGallery.style.display = 'grid'
+    formAddPicture.style.display = 'none'
+    modalTitle.innerHTML = 'Galerie photo'
+    btnAddPicture.style.display = 'flex'
+
+    resetFormAddWork()
+    document.addEventListener('click', dismissModal, true)
 })
 
 modalBtnClose.addEventListener('click', () => {
@@ -163,6 +177,8 @@ const resetFormAddWork = () => {
     preview.style.width = '58px'
     fileUpload.value = ''
     formAddWork.reset()
+
+    submitFormAddPicture.classList.add('disabled')
 
     fileError.style.display = 'none'
     titleError.style.display = 'none'
@@ -190,192 +206,81 @@ modalBtnBack.addEventListener('click', () => {
     resetFormAddWork()
 })
 
-// Déclanchement de l'événement ajouter une image
-// Clique de Ajouter une photo pour en séléctionner une
-fileUpload.addEventListener('change', () => {
 
-    // ce code récuper la source de l'image dans const file
+
+const hasValidExtension = (extension, validExtensions = ['jpg', 'jpeg', 'png']) => validExtensions.includes(extension.toLowerCase())
+
+const imageIsValid = () => {
     const file = fileUpload.files[0]
-
     console.log(file)
-    // ce code fait disparaitre les label et les span
-    labelFileUpload.style.display = 'none'
-    spanFileUpload.style.display = 'none'
 
-    // ce code ajout de la source de l'image qu'on séléctionne
-    preview.src = URL.createObjectURL(file)
+    if (file) {
+        const fileNameSplitted = file.name.split('.')
+        const extension = fileNameSplitted[fileNameSplitted.length - 1].toLowerCase()
+        if (file.size <= 4 * 1024 * 1024 && hasValidExtension(extension)) {
 
-    // ce code permet de redimensionner l'image pour qu'elle ne dépasse pas les dimensions de 600px de largeur et de 400px de hauteur
-    preview.style.height = 'auto'
-    preview.style.width = 'auto'
-})
+            labelFileUpload.style.display = 'none'
+            spanFileUpload.style.display = 'none'
+            preview.src = URL.createObjectURL(file)
+            preview.style.height = 'auto'
+            preview.style.width = 'auto'
 
+            if (inputTitle.value !== "") {
+                submitFormAddPicture.classList.remove('disabled')
+            }
+        }
+    } else {
+        labelFileUpload.style.display = 'flex'
+        spanFileUpload.style.display = 'flex'
+        preview.src = "./assets/icons/picture.png"
+        preview.style.height = '58px'
+        preview.style.width = '58px'
+        fileUpload.value = ''
+        submitFormAddPicture.classList.add('disabled')
+    }
+}
 
-/*
-// ce code permet de soumetre le formulaire quand on clique sur le bouton validez
-// il faut que ce code prend en compte quand le boutan est disable (désactiver   )
+// Ajouter des écouteurs d'événements pour valider le formulaire en temps réel
+fileUpload.addEventListener('change', () => imageIsValid());
 
-formAddPicture.addEventListener('submit', event => {
-
-    // ce code empeche le rechargment de la page
-    event.preventDefault() // Empêche la soumission du formulaire par défaut 
-
+inputTitle.addEventListener('input', () => {
     const file = fileUpload.files[0]
 
-    // l'objet " new FormData " formate les data passer en parametres par " postWork " 
-    const formData = new FormData()
-    // ici est spécifier toute les data qui vont être empécher d'être envoyer vers l'api
-    formData.append('image', file)
-    formData.append('title', inputTile.value)
-    formData.append('category', parseInt(selectCategory.value))
+    if (file) {
+        const fileNameSplitted = file.name.split('.')
+        const extension = fileNameSplitted[fileNameSplitted.length - 1].toLowerCase()
 
-    // postWork (dans le fichier api.js) permet de récuperer les data qu'on passe en parametre 
-    // ce code permet d'envoyer tous les élément formater 
-    postWork(formData).then(() => {
-
-        // si sa se passe bien on ferme la modal
-        modal.style.display = 'none'
-
-        // si sa se passe bien on récuper les traveaux pour les metre à jour sur la page
-        return getWorks()
-
-        // et on crée à nouveau la galerie
-    }).then(data => createGallery(data))
-})
-*/
-// s'assurer que chaque champ est bien valide
-// t'an que le champ n'est pas valide, il doit être impossible d'appuyer sur le bouton validez
-// on doit empecher la validation et la fermeture de la page
-// afficher des message d'alert si quelque chose ne vas pas
-// la contrainte est qu'il faut afficher une image qui soit jpg ou png de maximum 4 mo
-// faire des verifications sur le format de l'image (aussi le type de fichier) et de sa taille
-// metre en place la réinitialisation du formulaire d'est qu'on clique sur un image déja séléctionner
-
-
-// avant de recréer la galerie on doit faire de vérification sur :
-// avnt la soumition on doit vérifier :
-// qu'il fichier image au formata png ou jpg de 4mo max à bien été séléctionner
-// il faut empecher la soumition si cette regle n'est respecter
-// la soumission et le rechargement de la page doivent être empecher si les condition ne sont pas respecter
-
-
-
-
-// Fonction pour vérifier les contraintes
-
-
-const validateForm = () => {
-    const file = fileUpload.files[0];
-    const title = inputTitle.value.trim();
-    const category = selectCategory.value.trim();
-    let isValidated = false
-
-    if (file?.type !== 'image/jpeg' || file?.type !== 'image/png') {
-        // Vérifier le format de l'image
-        fileError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    } else if (file?.size > 4 * 1024 * 1024) {
-        // Vérifier la taille de l'image
-        fileError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    } else if (title === "") {
-        titleError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    } else {
-        // Si toutes les conditions sont remplies, activer le bouton de soumission
-        submitFormAddPicture.disabled = false;
-        titleError.style.display = 'none'
-        fileError.style.display = 'none'
-        isValidated = true
-    }
-
-    if (isValidated) {
-        submitFormAddPicture.classList.remove('disabled')
+        if (file.size <= 4 * 1024 * 1024 && hasValidExtension(extension) && inputTitle.value !== "") {
+            submitFormAddPicture.classList.remove('disabled')
+        } else {
+            submitFormAddPicture.classList.add('disabled')
+        }
     } else {
         submitFormAddPicture.classList.add('disabled')
     }
-
-    return isValidated;
-};
-
-// Ajouter des écouteurs d'événements pour valider le formulaire en temps réel
-fileUpload.addEventListener('change', validateForm);
-inputTitle.addEventListener('input', validateForm);
-selectCategory.addEventListener('change', validateForm);
+})
 
 formAddPicture.addEventListener('submit', event => {
     event.preventDefault(); // Empêche la soumission du formulaire par défaut
 
-    if (!validateForm()) {
-        return;
+    const file = fileUpload.files[0]
+
+    if (file) {
+        const fileNameSplitted = file.name.split('.')
+        const extension = fileNameSplitted[fileNameSplitted.length - 1].toLowerCase()
+        if (file.size <= 4 * 1024 * 1024 && hasValidExtension(extension) && inputTitle.value !== "") {
+            const file = fileUpload.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('title', inputTitle.value);
+            formData.append('category', parseInt(selectCategory.value));
+
+            postWork(formData).then(() => {
+                modal.style.display = 'none';
+                return getWorks();
+            }).then(data => createGallery(data));
+        }
     }
 
-    const file = fileUpload.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('title', inputTitle.value);
-    formData.append('category', parseInt(selectCategory.value));
-
-    postWork(formData).then(() => {
-        modal.style.display = 'none';
-        return getWorks();
-    }).then(data => createGallery(data));
 });
 
-
-
-/*
-
-submitAddPicture.addEventListener('click', () => { 
-
-    // ferifi si un fichier à été selectionner
-    if (fileUpload.files.length > 0) {
-        let typeFichier = fileUpload.type;
-    }else{
-        fileError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    }
-
-    // verifi le type de l'image
-    if (typeFichier === 'image/jpeg' || typeFichier === 'image/png'){
-        let tailleMax = 4 * 1024 * 1024;
-    }else{
-        fileError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    }
-
-    // verifi la taille de l'image
-    if (typeFichier.size <= tailleMax){
-    }else{
-        fileError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    }
-    
-     // verifi si un titre à été entrer
-    if (inputTitle.value.trim() !== ''){
-    }else{
-        titleError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    }
-
-    // vérifie s'il y à eu une selection
-    if (selectCategory.value !== '')){
-    }else{
-        selectError.style.display = 'block'
-        submitFormAddPicture.disabled = true;
-        isValidated = false
-    }
-
-
-    // Activation et désactivation du boutons de soumission submitAddPicture
-
-    if ()
-
-*/
